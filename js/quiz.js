@@ -1,5 +1,5 @@
 'use strict'
-window.onload = () => {
+window.addEventListener('load', () => {
     let quizs = document.querySelectorAll('.quiz');
 
     for (let i = 0; i < quizs.length; i++) {
@@ -102,4 +102,4 @@ window.onload = () => {
         window.dispatchEvent(new Event("resize"));
 
     }
-}
+});
