@@ -1,30 +1,76 @@
 'use strict'
+//Отступы контента квиза, когда видимый только один ответ и он не помещается
+let quiz_content_padding_small = 10;
+let quiz_progressbar_margin_start = 26;
 window.addEventListener('load', () => {
     let quizs = document.querySelectorAll('.quiz');
 
     for (let i = 0; i < quizs.length; i++) {
         //Получаем все необходимое из doma
         let quiz = quizs[i];
-        let slider = quiz.querySelector('.quiz_slider');
-        let wrapper_slider = quiz.querySelector('.wrapper_quiz_slider');
-        let quiz_answers = quiz.querySelectorAll('.quiz_answer');
         let quiz_content = quiz.querySelector('.quiz_content');
-        let quiz_answer_width = parseInt(getComputedStyle(quiz_answers[0]).flexBasis);
         let quiz_content_padding = parseInt(getComputedStyle(quiz_content).paddingLeft);
-        let slider_transition = getComputedStyle(slider).transition;
+        let quiz_steps = quiz.querySelectorAll('.quiz_step');
+        let quiz_progressbar = quiz.querySelector('.quiz_progressbar');
+        let quiz_button_wrapper = quiz.querySelector('.quiz_button_wrapper');
+        let quiz_button = quiz_button_wrapper.querySelector('.quiz_button');
+        let quiz_button_back = quiz_button_wrapper.querySelector('.quiz_button_back');
+
+        let quiz_step_scale = getComputedStyle(quiz_steps[1]).transform;
         //Количество отступов - элементов справа
         let number_margin_right = 0;
-        //Отступы контента квиза, когда видимый только один ответ и он не помещается
-        let quiz_content_padding_small = 10;
-        //Создаем и вставляем стрелочки в квиз
-        let arroy_left = document.createElement('i');
-        let arroy_right = document.createElement('i');
-        arroy_left.classList.add('fas', 'fa-chevron-left');
-        arroy_right.classList.add('fas', 'fa-chevron-right');
-        wrapper_slider.insertAdjacentElement('afterbegin', arroy_left);
-        wrapper_slider.insertAdjacentElement('afterbegin', arroy_right);
+        //Активный шаг
+        let active_step = 0;
+        let active_quiz_step = quiz_steps[active_step];
 
-        window.onresize = () => {
+        function get_quiz_progressbar_margin() {
+            return parseInt(getComputedStyle(quiz_button_wrapper).width) + quiz_progressbar_margin_start + 'px';
+        }
+
+        function view_next_quiz_step() {
+            quiz_steps[active_step].style.display = "block";
+            number_margin_right = 0;
+            active_quiz_step = quiz_steps[active_step];
+            window.dispatchEvent(new Event("resize"));
+            active_quiz_step.style.transform = 'scale(1)';
+        }
+        quiz_button.addEventListener('click', () => {
+            quiz_button_back.removeAttribute('disabled');
+
+            active_quiz_step.style.transform = quiz_step_scale;
+            setTimeout(() => {
+                quiz_steps[active_step].style.display = "none";
+                active_step++;
+                if (active_step == quiz_steps.length - 1) {
+                    quiz_button.innerText = "Последний шаг";
+                    quiz_progressbar.style.marginRight = get_quiz_progressbar_margin();
+                }
+                view_next_quiz_step();
+            }, 250);
+        });
+        quiz_button_back.addEventListener('click', () => {
+            quiz_button.innerText = "Далее";
+            quiz_progressbar.style.marginRight = get_quiz_progressbar_margin();
+
+            active_quiz_step.style.transform = quiz_step_scale;
+            setTimeout(() => {
+                quiz_steps[active_step].style.display = "none";
+                active_step--;
+                if (!active_step) {
+                    quiz_button_back.setAttribute('disabled', '');
+                }
+                view_next_quiz_step();
+            }, 250);
+        });
+
+        window.addEventListener('resize', () => {
+            let wrapper_slider = active_quiz_step.querySelector('.wrapper_quiz_slider');
+            let arroy_left = wrapper_slider.querySelector('.fa-chevron-left');
+            let arroy_right = wrapper_slider.querySelector('.fa-chevron-right');
+            let slider = wrapper_slider.querySelector('.quiz_slider');
+            let quiz_answers = slider.querySelectorAll('.quiz_answer');
+            let quiz_answer_width = parseInt(getComputedStyle(quiz_answers[0]).flexBasis);
+            let slider_transition = getComputedStyle(slider).transition;
             let wrapper_slider_width = wrapper_slider.offsetWidth;
             for (let j = 1; j <= quiz_answers.length + 1; j++) {
                 if (wrapper_slider_width < quiz_answer_width * j) {
@@ -44,7 +90,7 @@ window.addEventListener('load', () => {
                         quiz_content.style.paddingLeft = quiz_content_padding + 'px';
                         quiz_content.style.paddingRight = quiz_content_padding + 'px';
                     }
-                    quiz.querySelector('.quiz_slider').style.width = 100 * (quiz_answers.length / visible_answers) + '%';
+                    slider.style.width = 100 * (quiz_answers.length / visible_answers) + '%';
 
 
                     if (number_margin_right > invisible_answers) {
@@ -97,7 +143,7 @@ window.addEventListener('load', () => {
                     break;
                 }
             }
-        }
+        });
 
         window.dispatchEvent(new Event("resize"));
 
