@@ -8,15 +8,22 @@ window.addEventListener('load', () => {
     for (let i = 0; i < quizs.length; i++) {
         //Получаем все необходимое из doma
         let quiz = quizs[i];
-        let quiz_content = quiz.querySelector('.quiz_content');
-        let quiz_content_padding = parseInt(getComputedStyle(quiz_content).paddingLeft);
         let quiz_steps = quiz.querySelectorAll('.quiz_step');
         let quiz_progressbar = quiz.querySelector('.quiz_progressbar');
         let quiz_button_wrapper = quiz.querySelector('.quiz_button_wrapper');
         let quiz_button = quiz_button_wrapper.querySelector('.quiz_button');
         let quiz_button_back = quiz_button_wrapper.querySelector('.quiz_button_back');
-
         let quiz_step_scale = getComputedStyle(quiz_steps[1]).transform;
+
+        let quiz_start_page_button = quiz.querySelector('.quiz_start_page_button');
+        let quiz_content = quiz.querySelector('.quiz_content');
+        let quiz_start_page = quiz_content.querySelector('.quiz_start_page');
+        let quiz_start_page_image = quiz_start_page.querySelector('img');
+        let quiz_start_page_content = quiz_start_page.querySelector('.quiz_start_page_content');
+        let quiz_end_page = quiz_content.querySelector('.quiz_end_page');
+        let quiz_left_block = quiz_end_page.querySelector('.quiz_left_block');
+        let quiz_right_block = quiz_end_page.querySelector('.quiz_right_block');
+        let quiz_end_page_content = quiz_end_page.querySelector('.quiz_end_page_content');
         //Количество отступов - элементов справа
         let number_margin_right = 0;
         //Активный шаг
@@ -34,20 +41,39 @@ window.addEventListener('load', () => {
             window.dispatchEvent(new Event("resize"));
             active_quiz_step.style.transform = 'scale(1)';
         }
-        quiz_button.addEventListener('click', () => {
+
+        quiz_start_page_button.addEventListener('click', () => {
+            quiz_start_page.style.backgroundColor = 'unset';
+            quiz_start_page_image.style.transform = 'translateX(-100%)';
+            quiz_start_page_content.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                quiz_content.style.overflow = 'auto';
+                quiz_start_page.style.display = 'none';
+            }, 700);
+        });
+
+        quiz_button.onclick = () => {
             quiz_button_back.removeAttribute('disabled');
 
             active_quiz_step.style.transform = quiz_step_scale;
             setTimeout(() => {
                 quiz_steps[active_step].style.display = "none";
+
                 active_step++;
                 if (active_step == quiz_steps.length - 1) {
                     quiz_button.innerText = "Последний шаг";
                     quiz_progressbar.style.marginRight = get_quiz_progressbar_margin();
+                    quiz_button.onclick = () => {
+                        quiz_end_page.style.width = '100%';
+                        quiz_content.style.overflow = 'hidden';
+                        quiz_left_block.style.transform = 'translateX(0%)';
+                        quiz_right_block.style.transform = 'translateX(0%)';
+                        quiz_end_page_content.style.opacity = '1';
+                    }
                 }
                 view_next_quiz_step();
             }, 250);
-        });
+        };
         quiz_button_back.addEventListener('click', () => {
             quiz_button.innerText = "Далее";
             quiz_progressbar.style.marginRight = get_quiz_progressbar_margin();
@@ -55,6 +81,7 @@ window.addEventListener('load', () => {
             active_quiz_step.style.transform = quiz_step_scale;
             setTimeout(() => {
                 quiz_steps[active_step].style.display = "none";
+
                 active_step--;
                 if (!active_step) {
                     quiz_button_back.setAttribute('disabled', '');
@@ -79,17 +106,7 @@ window.addEventListener('load', () => {
                     let invisible_answers = quiz_answers.length - visible_answers;
                     let number_answers_right = invisible_answers - number_margin_right;
                     let number_answers_left = number_margin_right;
-                    //Если только один ответ видимый и он не помещяеться
-                    if (j == 1) {
-                        //Уменьшаем падинги контента
-                        quiz_content.style.paddingLeft = quiz_content_padding_small + 'px';
-                        quiz_content.style.paddingRight = quiz_content_padding_small + 'px';
-                        j++;
-                    } else if (wrapper_slider_width - (quiz_content_padding - quiz_content_padding_small) * 2 > quiz_answer_width) {
-                        //Иначе увеличиваем падинги до предыдущего состояния
-                        quiz_content.style.paddingLeft = quiz_content_padding + 'px';
-                        quiz_content.style.paddingRight = quiz_content_padding + 'px';
-                    }
+
                     slider.style.width = 100 * (quiz_answers.length / visible_answers) + '%';
 
 
