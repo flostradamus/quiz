@@ -42,17 +42,7 @@ window.addEventListener('load', () => {
             active_quiz_step.style.transform = 'scale(1)';
         }
 
-        quiz_start_page_button.addEventListener('click', () => {
-            quiz_start_page.style.backgroundColor = 'unset';
-            quiz_start_page_image.style.transform = 'translateX(-100%)';
-            quiz_start_page_content.style.transform = 'translateX(100%)';
-            setTimeout(() => {
-                quiz_content.style.overflow = 'auto';
-                quiz_start_page.style.display = 'none';
-            }, 700);
-        });
-
-        quiz_button.onclick = () => {
+        function quiz_button_click() {
             quiz_button_back.removeAttribute('disabled');
 
             active_quiz_step.style.transform = quiz_step_scale;
@@ -73,10 +63,25 @@ window.addEventListener('load', () => {
                 }
                 view_next_quiz_step();
             }, 250);
-        };
+        }
+
+        quiz_start_page_button.addEventListener('click', () => {
+            quiz_button_back.setAttribute('disabled', '');
+            quiz_start_page.style.backgroundColor = 'unset';
+            quiz_start_page_image.style.transform = 'translateX(-100%)';
+            quiz_start_page_content.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                quiz_content.style.overflow = 'auto';
+                quiz_start_page.style.display = 'none';
+            }, 700);
+        });
+
+        quiz_button.onclick = quiz_button_click;
+
         quiz_button_back.addEventListener('click', () => {
             quiz_button.innerText = "Далее";
             quiz_progressbar.style.marginRight = get_quiz_progressbar_margin();
+            quiz_button.onclick = quiz_button_click;
 
             active_quiz_step.style.transform = quiz_step_scale;
             setTimeout(() => {
