@@ -14,7 +14,6 @@ window.addEventListener('load', () => {
         let quiz_button = quiz_button_wrapper.querySelector('.quiz_button');
         let quiz_button_back = quiz_button_wrapper.querySelector('.quiz_button_back');
         let quiz_step_scale = getComputedStyle(quiz_steps[1]).transform;
-
         let quiz_start_page_button = quiz.querySelector('.quiz_start_page_button');
         let quiz_content = quiz.querySelector('.quiz_content');
         let quiz_start_page = quiz_content.querySelector('.quiz_start_page');
@@ -24,6 +23,8 @@ window.addEventListener('load', () => {
         let quiz_left_block = quiz_end_page.querySelector('.quiz_left_block');
         let quiz_right_block = quiz_end_page.querySelector('.quiz_right_block');
         let quiz_end_page_content = quiz_end_page.querySelector('.quiz_end_page_content');
+        let quiz_close = quiz_content.querySelector('.quiz_close');
+
         //Количество отступов - элементов справа
         let number_margin_right = 0;
         //Активный шаг
@@ -54,11 +55,14 @@ window.addEventListener('load', () => {
                     quiz_button.innerText = "Последний шаг";
                     quiz_progressbar.style.marginRight = get_quiz_progressbar_margin();
                     quiz_button.onclick = () => {
+                        quiz_close.style.color = 'grey';
                         quiz_end_page.style.width = '100%';
                         quiz_content.style.overflow = 'hidden';
                         quiz_left_block.style.transform = 'translateX(0%)';
                         quiz_right_block.style.transform = 'translateX(0%)';
-                        quiz_end_page_content.style.opacity = '1';
+                        setTimeout(() => {
+                            quiz_end_page_content.style.opacity = '1';
+                        }, 300);
                     }
                 }
                 view_next_quiz_step();
