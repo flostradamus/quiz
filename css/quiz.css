@@ -476,6 +476,14 @@
           box-shadow: 0 0 5px rgba(0, 255, 128, 0.4);
 }
 
+.quiz_content .quiz_footer .quiz_progress_button_next_block .quiz_progressbar .quiz_progressbar_filling {
+  height: 100%;
+  width: 0;
+  -webkit-transition: width 0.5s;
+  transition: width 0.5s;
+  background: springgreen;
+}
+
 .quiz_content .quiz_progressbar_text {
   -ms-flex-preferred-size: 100%;
       flex-basis: 100%;

@@ -403,6 +403,12 @@ $quiz_contact_block_width: 450px;
                 height: 10px;
                 background-color: rgba(0, 255, 128, 0.4);
                 box-shadow: 0 0 5px rgba(0, 255, 128, 0.4);
+                .quiz_progressbar_filling {
+                    height: 100%;
+                    width: 0;
+                    transition: width 0.5s;
+                    background: springgreen;
+                }
             }
 
         }

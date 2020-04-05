@@ -24,7 +24,10 @@ window.addEventListener('load', () => {
         let quiz_right_block = quiz_end_page.querySelector('.quiz_right_block');
         let quiz_end_page_content = quiz_end_page.querySelector('.quiz_end_page_content');
         let quiz_close = quiz_content.querySelector('.quiz_close');
-
+        let quiz_progressbar_text = quiz_content.querySelector('.quiz_progressbar_text span');
+        let quiz_progressbar_filling = quiz_content.querySelector('.quiz_progressbar_filling');
+        let procent_step = Math.trunc(100 / quiz_steps.length);
+        let procent = 0;
         //Количество отступов - элементов справа
         let number_margin_right = 0;
         //Активный шаг
@@ -41,10 +44,13 @@ window.addEventListener('load', () => {
             active_quiz_step = quiz_steps[active_step];
             window.dispatchEvent(new Event("resize"));
             active_quiz_step.style.transform = 'scale(1)';
+            quiz_progressbar_text.innerText = procent;
+            quiz_progressbar_filling.style.width = procent;
         }
 
         function quiz_button_click() {
             quiz_button_back.removeAttribute('disabled');
+            procent = parseInt(quiz_progressbar_text.innerText) + procent_step + '%';
 
             active_quiz_step.style.transform = quiz_step_scale;
             setTimeout(() => {
@@ -86,6 +92,7 @@ window.addEventListener('load', () => {
             quiz_button.innerText = "Далее";
             quiz_progressbar.style.marginRight = get_quiz_progressbar_margin();
             quiz_button.onclick = quiz_button_click;
+            procent = parseInt(quiz_progressbar_text.innerText) - procent_step + '%';
 
             active_quiz_step.style.transform = quiz_step_scale;
             setTimeout(() => {
