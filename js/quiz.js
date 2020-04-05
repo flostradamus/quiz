@@ -44,36 +44,59 @@ window.addEventListener('load', () => {
             active_quiz_step = quiz_steps[active_step];
             window.dispatchEvent(new Event("resize"));
             active_quiz_step.style.transform = 'scale(1)';
+        }
+
+        function felling_progressbar() {
             quiz_progressbar_text.innerText = procent;
             quiz_progressbar_filling.style.width = procent;
         }
 
-        function quiz_button_click() {
-            quiz_button_back.removeAttribute('disabled');
-            procent = parseInt(quiz_progressbar_text.innerText) + procent_step + '%';
-
+        function hidden_prev_quiz_step() {
             active_quiz_step.style.transform = quiz_step_scale;
-            setTimeout(() => {
-                quiz_steps[active_step].style.display = "none";
-
-                active_step++;
-                if (active_step == quiz_steps.length - 1) {
-                    quiz_button.innerText = "Последний шаг";
-                    quiz_progressbar.style.marginRight = get_quiz_progressbar_margin();
-                    quiz_button.onclick = () => {
-                        quiz_close.style.color = 'grey';
-                        quiz_end_page.style.width = '100%';
-                        quiz_content.style.overflow = 'hidden';
-                        quiz_left_block.style.transform = 'translateX(0%)';
-                        quiz_right_block.style.transform = 'translateX(0%)';
-                        setTimeout(() => {
-                            quiz_end_page_content.style.opacity = '1';
-                        }, 300);
-                    }
-                }
-                view_next_quiz_step();
-            }, 250);
+            quiz_steps[active_step].style.display = "none";
         }
+
+        function quiz_button_next_click() {
+            procent = parseInt(quiz_progressbar_text.innerText) + procent_step + '%';
+            quiz_button_back.removeAttribute('disabled');
+
+            hidden_prev_quiz_step();
+            felling_progressbar();
+            active_step++;
+            if (active_step == quiz_steps.length - 1) {
+                quiz_button.innerText = "Последний шаг";
+                quiz_progressbar.style.marginRight = get_quiz_progressbar_margin();
+                quiz_button.onclick = () => {
+                    quiz_close.style.color = 'grey';
+                    quiz_end_page.style.width = '100%';
+                    quiz_content.style.overflow = 'hidden';
+                    quiz_left_block.style.transform = 'translateX(0%)';
+                    quiz_right_block.style.transform = 'translateX(0%)';
+                    setTimeout(() => {
+                        quiz_end_page_content.style.opacity = '1';
+                    }, 300);
+                }
+            }
+            view_next_quiz_step();
+        }
+        function quiz_button_back_click() {
+            procent = parseInt(quiz_progressbar_text.innerText) - procent_step + '%';
+            quiz_button.innerText = "Далее";
+            quiz_progressbar.style.marginRight = get_quiz_progressbar_margin();
+            quiz_button.onclick = quiz_button_next_click;
+
+            hidden_prev_quiz_step();
+            felling_progressbar();
+
+            active_step--;
+            if (!active_step) {
+                quiz_button_back.setAttribute('disabled', '');
+            }
+            view_next_quiz_step();
+        }
+        quiz_button.onclick = quiz_button_next_click;
+
+        quiz_button_back.addEventListener('click', quiz_button_back_click);
 
         quiz_start_page_button.addEventListener('click', () => {
             quiz_button_back.setAttribute('disabled', '');
@@ -84,26 +107,6 @@ window.addEventListener('load', () => {
                 quiz_content.style.overflow = 'auto';
                 quiz_start_page.style.display = 'none';
             }, 700);
-        });
-
-        quiz_button.onclick = quiz_button_click;
-
-        quiz_button_back.addEventListener('click', () => {
-            quiz_button.innerText = "Далее";
-            quiz_progressbar.style.marginRight = get_quiz_progressbar_margin();
-            quiz_button.onclick = quiz_button_click;
-            procent = parseInt(quiz_progressbar_text.innerText) - procent_step + '%';
-
-            active_quiz_step.style.transform = quiz_step_scale;
-            setTimeout(() => {
-                quiz_steps[active_step].style.display = "none";
-
-                active_step--;
-                if (!active_step) {
-                    quiz_button_back.setAttribute('disabled', '');
-                }
-                view_next_quiz_step();
-            }, 250);
         });
 
         window.addEventListener('resize', () => {
