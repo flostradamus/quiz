@@ -39,11 +39,13 @@ window.addEventListener('load', () => {
         }
 
         function view_next_quiz_step() {
-            quiz_steps[active_step].style.display = "block";
-            number_margin_right = 0;
-            active_quiz_step = quiz_steps[active_step];
-            window.dispatchEvent(new Event("resize"));
-            active_quiz_step.style.transform = 'scale(1)';
+            setTimeout(() => {
+                active_quiz_step = quiz_steps[active_step];
+                active_quiz_step.style.display = "block";
+                number_margin_right = 0;
+                window.dispatchEvent(new Event("resize"));
+                active_quiz_step.style.transform = 'scale(1)';
+            }, 300);
         }
 
         function felling_progressbar() {
@@ -53,7 +55,9 @@ window.addEventListener('load', () => {
 
         function hidden_prev_quiz_step() {
             active_quiz_step.style.transform = quiz_step_scale;
-            quiz_steps[active_step].style.display = "none";
+            setTimeout(() => {
+                active_quiz_step.style.display = "none";
+            }, 300);
         }
 
         function quiz_button_next_click() {
@@ -79,6 +83,7 @@ window.addEventListener('load', () => {
             }
             view_next_quiz_step();
         }
+
         function quiz_button_back_click() {
             procent = parseInt(quiz_progressbar_text.innerText) - procent_step + '%';
             quiz_button.innerText = "Далее";

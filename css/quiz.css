@@ -569,6 +569,9 @@
 
 .quiz_content .wrapper_quiz_slider .quiz_slider .quiz_answer img {
   width: 100%;
+  height: 85%;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .quiz_content .wrapper_quiz_slider .quiz_slider .quiz_answer input {
@@ -584,10 +587,10 @@
 }
 
 .quiz_content .quiz_body .quiz_step {
-  -webkit-transition: -webkit-transform 0.5s;
-  transition: -webkit-transform 0.5s;
-  transition: transform 0.5s;
-  transition: transform 0.5s, -webkit-transform 0.5s;
+  -webkit-transition: -webkit-transform 0.3s;
+  transition: -webkit-transform 0.3s;
+  transition: transform 0.3s;
+  transition: transform 0.3s, -webkit-transform 0.3s;
 }
 
 .quiz_content .quiz_body .quiz_step:not(:first-child) {
